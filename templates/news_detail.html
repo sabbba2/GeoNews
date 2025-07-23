@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ news.title }}{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm mb-4">
+    <img
+        src="{{ news.image_url }}"
+        onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default.jpg') }}';"
+        class="card-img-top"
+        alt="{{ news.title }}"
+    />
+    <div class="card-body">
+        <h2 class="card-title">{{ news.title }}</h2>
+        <p class="card-text">{{ news.content|safe }}</p>
+        <p class="text-muted">🗓️ {{ news.date_posted.strftime('%Y-%m-%d %H:%M') }}</p>
+        {% if news.link %}
+        <a href="{{ news.link }}" class="btn btn-outline-primary mt-3" target="_blank" rel="noopener noreferrer">🔗 წყაროზე გადასვლა</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card shadow-sm mb-5">
+    <div class="card-body">
+        <h5 class="card-title">💬 კომენტარები</h5>
+        {% if news.comments %}
+            {% for comment in news.comments %}
+            <div class="border-bottom pb-2 mb-3">
+                <p class="mb-1">{{ comment.content }}</p>
+                <small class="text-muted">👤 {{ comment.user.username }} · {{ comment.date_posted.strftime('%Y-%m-%d %H:%M') }}</small>
+                {% if session.get('user_id') == comment.user_id or session.get('role') == 'admin' %}
+                <form action="{{ url_for('delete_comment', comment_id=comment.id) }}" method="POST" class="mt-2">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">წაშლა</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">💤 ჯერ კომენტარი არ არის.</p>
+        {% endif %}
+    </div>
+
+    {% if session.get('user_id') %}
+    <div class="card-footer bg-light">
+        <form action="{{ url_for('add_comment', news_id=news.id) }}" method="POST">
+            <div class="mb-3">
+                <textarea
+                    name="content"
+                    class="form-control"
+                    rows="2"
+                    placeholder="დაწერეთ კომენტარი..."
+                    required
+                ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">💬 კომენტარის დამატება</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="card-footer text-muted text-center">
+        <a href="{{ url_for('login') }}">შედით</a>, რომ დაწეროთ კომენტარი.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

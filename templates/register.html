@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}რეგისტრაცია{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #6f86d6, #48c6ef);
+    min-height: 100vh;
+  }
+  .card {
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+  }
+  .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(72, 198, 239, 0.5);
+  }
+  .input-group-text {
+    background-color: #48c6ef;
+    border: none;
+    color: white;
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+  }
+  .btn-success {
+    background: #48c6ef;
+    border: none;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    transition: background 0.3s ease;
+  }
+  .btn-success:hover {
+    background: #6f86d6;
+  }
+  .form-floating > label {
+    color: #555;
+  }
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card p-4 shadow-sm" style="width: 100%; max-width: 400px; background: white;">
+        <h3 class="text-center mb-4 fw-bold text-primary">📝 რეგისტრაცია</h3>
+
+        <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-floating mb-3">
+                {{ form.username(class="form-control", placeholder="მომხმარებლის სახელი") }}
+                {{ form.username.label(class="form-label") }}
+            </div>
+
+            <div class="form-floating mb-3 input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                {{ form.password(class="form-control", placeholder="პაროლი") }}
+                {{ form.password.label(class="form-label visually-hidden") }}
+            </div>
+
+            <div class="form-floating mb-4 input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                {{ form.confirm_password(class="form-control", placeholder="გაიმეორეთ პაროლი") }}
+                {{ form.confirm_password.label(class="form-label visually-hidden") }}
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mb-3">✅ რეგისტრაცია</button>
+        </form>
+
+        <p class="text-center text-muted">
+            უკვე გაქვთ ანგარიში? <a href="{{ url_for('login') }}" class="text-primary fw-semibold">შესვლა</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
